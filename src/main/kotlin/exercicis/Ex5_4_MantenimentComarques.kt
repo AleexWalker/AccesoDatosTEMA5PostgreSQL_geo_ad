@@ -103,44 +103,54 @@ class FinestraMantenimentComarques : JFrame() {
         var llista = ArrayList<Comarca>()
         // ací aniran les sentències per a omplir (i retornar) la llista de comarques
 
-        val queryComarcas = sessio.createQuery("select nomC from Comarca")
-        for (comarca in queryComarcas.list()) {
-            comarca as Comarca
-            llista.add(comarca)
+        val queryComarcas = sessio.createQuery("from Comarca order by nomC")
+
+        for (c in queryComarcas.list()) {
+            c as Comarca
+            llista.add(c)
         }
         return llista
     }
 
     fun visComarca() {
         // Mètode per a visualitzar la comarca marcada per l'índex que ve com a paràmetre
-
+        nomComarca.text = llistaComarques[indActual].nomC
+        nomProvincia.text = llistaComarques[indActual].provincia
         controlBotons()
     }
 
     fun primer() {
-
+        indActual = 0
         visComarca()
     }
 
     fun anterior() {
-
+        indActual--
         visComarca()
     }
 
     fun seguent() {
-
+        indActual++
         visComarca()
     }
 
     fun ultim() {
-
+        indActual = llistaComarques.lastIndex
         visComarca()
     }
 
     fun controlBotons() {
         // Mètode per a habilitar/deshabilitar els botons anterior i següent, si s'està en la primera o última comarca
         // No us oblideu d'habilitar-los quan toque
+        if (indActual == llistaComarques.lastIndex)
+            seguent.isEnabled = false
+        else
+            seguent.isEnabled = true
 
+        if (indActual == 0)
+            anterior.isEnabled = false
+        else
+            anterior.isEnabled = true
     }
 
     fun eixir() {

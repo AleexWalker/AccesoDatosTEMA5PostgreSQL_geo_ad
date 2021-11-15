@@ -61,7 +61,7 @@ class FinestraComboBox : JFrame() {
 
     fun agafarComarques() {
         // Instruccions per a posar en el ComboBox el nom de totes les comarques, millor si és per ordre alfabètic
-        val queryComarcas = sessio.createQuery("select nomC from Comarca")
+        val queryComarcas = sessio.createQuery("select nomC from Comarca order by nomC")
         for (comarca in queryComarcas.list()) {
             comarca as String
             com.addItem(comarca)
@@ -92,13 +92,11 @@ class FinestraComboBox : JFrame() {
         // La millor manera és per mig d'una consulta. Podem tenir problemes amb la cometa simple
         // Una manera de solucionar el problema de la cometa simple és utilitzar poble.replaceAll("'","''").
         // Una altra és utilitzar paràmetres
+        var poble = poble.replace("'","''")
+        val queryInstitus = sessio.createQuery("select count(*) from Institut where poblacio.nom = '$poble'").uniqueResult()
 
-        val queryInstitus = sessio.createQuery("select com_m from Institut ")
-        val instituts = sessio.load("classes.Poblacio", poble) as Poblacio
-
-        peu.text = instituts.comarca.nomC.toString() + ": " + instituts.instituts.size.toString() + " instituts"
+        peu.text = "$poble: $queryInstitus"
     }
-
 }
 
 fun main() {
